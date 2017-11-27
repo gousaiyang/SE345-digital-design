@@ -2,7 +2,7 @@ module centisecond_clock(refclk, outclk);
 	input      refclk;
 	output reg outclk;
 	reg [24:0] counter;
-	parameter half_max = 249999;
+	parameter half_max = 500000 / 2 - 1;
 	initial begin
 		counter = 0;
 		outclk = 0;
