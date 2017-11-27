@@ -1,7 +1,7 @@
 module sevenseg_decimal(data, ledsegments);
 	input      [3:0] data;
 	output reg [6:0] ledsegments;
-	always @(*)
+	always @(data)
 		case (data)
 			// gfe_dcba -> 654_3210
 			// 1 -> off, 0 -> on

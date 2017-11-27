@@ -1,48 +1,81 @@
-module stopwatch_main(clk, hex5, hex4, hex3, hex2, hex1, hex0);
-	input         clk;
-	output [6:0]  hex5, hex4, hex3, hex2, hex1, hex0;
-	reg    [18:0] counter;
+module status_clock(refclk, counting, paused, reset, outclk);
+	input      refclk, counting, paused, reset;
+	output reg outclk;
+	reg [5:0]  counter;
+	parameter half_max = 49;
 	initial begin
+		outclk = 1;
 		counter = 0;
 	end
-
-	// reg [3:0] minute_display_high;
-	// reg [3:0] minute_display_low;
-	// reg [3:0] second_display_high;
-	// reg [3:0] second_display_low;
-	// reg [3:0] msecond_display_high;
-	// reg [3:0] msecond_display_low;
-	// // 定义 6 个计时数据（变量）寄存器：
-	// reg [3:0] minute_counter_high;
-	// reg [3:0] minute_counter_low;
-	// reg [3:0] second_counter_high;
-	// reg [3:0] second_counter_low;
-	// reg [3:0] msecond_counter_high;
-	// reg [3:0] msecond_counter_low;
-	// reg [31:0] counter_50M; // 计时用计数器， 每个 50MHz 的 clock 为 20ns。
-	// // DE1-SOC 板上有 4 个时钟， 都为 50MHz，所以需要 500000 次 20ns 之后，才是 10ms。16
-	// reg reset_1_time; // 消抖动用状态寄存器 -- for reset KEY
-	// reg [31:0] counter_reset; // 按键状态时间计数器
-	// reg start_1_time; //消抖动用状态寄存器 -- for counter/pause KEY
-	// reg [31:0] counter_start; //按键状态时间计数器
-	// reg display_1_time; //消抖动用状态寄存器 -- for KEY_display_refresh/pause
-	// reg [31:0] counter_display; //按键状态时间计数器
-	// reg start; // 工作状态寄存器
-	// reg display; // 工作状态寄存器
-	// sevenseg 模块为 4 位的 BCD 码至 7 段 LED 的译码器，
-	//下面实例化 6 个 LED 数码管的各自译码器。
-	sevenseg_decimal(counter / 60000, hex5);
-	sevenseg_decimal(counter / 6000 % 10, hex4);
-	sevenseg_decimal(counter % 6000 / 1000, hex3);
-	sevenseg_decimal(counter / 100 % 10, hex2);
-	sevenseg_decimal(counter % 100 / 10, hex1);
-	sevenseg_decimal(counter % 10, hex0);
-	always @(posedge clk)
-		begin
-			if (counter == 359999) begin
+	always @(posedge refclk or negedge reset) begin
+		if (!reset)
+			counter = 0;
+		else if (counting && !paused) begin
+			if (counter == half_max) begin
 				counter = 0;
-			end else begin
-				counter = counter + 1;
+				outclk = ~outclk;
 			end
+			else
+				counter = counter + 1;
 		end
+	end
+
+endmodule
+
+module show_counting_status(status_clk, counting, reset, led);
+	input        status_clk, counting, reset;
+	output [9:0] led;
+	reg    [3:0] pos;
+	parameter max_pos = 9;
+	initial begin
+		pos = max_pos;
+	end
+	assign led = counting ? 1 << pos : 0;
+	always @(posedge status_clk or negedge reset) begin
+		if (!reset)
+			pos = max_pos;
+		else
+			pos = pos ? pos - 1 : max_pos;
+	end
+endmodule
+
+module show_time(time_counter, hex5, hex4, hex3, hex2, hex1, hex0);
+	input [18:0] time_counter;
+	output [6:0] hex5, hex4, hex3, hex2, hex1, hex0;
+	sevenseg_decimal(time_counter / 60000, hex5);
+	sevenseg_decimal(time_counter / 6000 % 10, hex4);
+	sevenseg_decimal(time_counter % 6000 / 1000, hex3);
+	sevenseg_decimal(time_counter / 100 % 10, hex2);
+	sevenseg_decimal(time_counter % 100 / 10, hex1);
+	sevenseg_decimal(time_counter % 10, hex0);
+endmodule
+
+module stopwatch_main(clk, key3, key2, key1, key0, hex5, hex4, hex3, hex2, hex1, hex0, led);
+	input         clk, key3, key2, key1, key0;
+	output [6:0]  hex5, hex4, hex3, hex2, hex1, hex0;
+	output [9:0]  led;
+	wire          status_clk;
+	reg    [18:0] time_counter;
+	reg           counting, paused;
+	parameter max_time = 359999;
+	initial begin
+		time_counter = 0;
+		counting = 0;
+		paused = 0;
+	end
+	show_time(time_counter, hex5, hex4, hex3, hex2, hex1, hex0);
+	status_clock(clk, counting, paused, key3, status_clk);
+	show_counting_status(status_clk, counting, key3, led); // Still buggy. Sometimes not synchonized.
+	always @(negedge key3)
+		counting = ~counting;
+	always @(negedge key2 or negedge key3)
+		paused = !key3 ? 0 : ~paused; // Cannot write `key3 ? ~paused : 0`!
+	always @(posedge clk or negedge key3) begin
+		if (!key3)
+			time_counter = 0;
+		else begin
+			if (counting && !paused)
+				time_counter = time_counter == max_time ? 0 : time_counter + 1;
+		end
+	end
 endmodule
