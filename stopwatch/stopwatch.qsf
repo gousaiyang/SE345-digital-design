@@ -127,4 +127,5 @@ set_location_assignment PIN_AA15 -to KEY[1]
 set_location_assignment PIN_AA14 -to KEY[0]
 set_global_assignment -name VERILOG_FILE debouncer.v
 
+set_global_assignment -name VERILOG_FILE memory.v
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
