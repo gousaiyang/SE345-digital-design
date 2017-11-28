@@ -26,9 +26,16 @@ applicable agreement for further details.
 	(port
 		(pt 0 32)
 		(input)
-		(text "keyin" (rect 0 0 21 12)(font "Arial" ))
-		(text "keyin" (rect 21 27 42 39)(font "Arial" ))
+		(text "clk" (rect 0 0 10 12)(font "Arial" ))
+		(text "clk" (rect 21 27 31 39)(font "Arial" ))
 		(line (pt 0 32)(pt 16 32)(line_width 1))
+	)
+	(port
+		(pt 0 48)
+		(input)
+		(text "keyin" (rect 0 0 21 12)(font "Arial" ))
+		(text "keyin" (rect 21 43 42 55)(font "Arial" ))
+		(line (pt 0 48)(pt 16 48)(line_width 1))
 	)
 	(port
 		(pt 152 32)
