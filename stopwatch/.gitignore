@@ -44,7 +44,7 @@
 ##
 !*.qpf
 !*.qsf
-!*.qws
+#!*.qws
 ##
 !*.bdf
 !*.vhd
