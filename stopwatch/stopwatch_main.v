@@ -30,12 +30,11 @@ endmodule
 
 // Main module.
 // Key usage:
-//     key3: Start / Stop counting (stop will reset counter).
-//     key2: Pause / Resume counting.
+//     key3: Reset all states (will stop current counting).
+//     key2: Start / Pause / Resume counting.
 //     key1: Pause display updating (but counting is still in process), display current time value and freeze.
 //     key0: Resume display updating.
-//     When stopped, key2, key1 and key0 will be disabled.
-//     When paused, key1 and key0 will be disabled.
+//     When stopped or paused, key1 and key0 will be disabled.
 module stopwatch_main(clk, key3, key2, key1, key0, hex5, hex4, hex3, hex2, hex1, hex0, led);
 	input         clk, key3, key2, key1, key0;
 	output [6:0]  hex5, hex4, hex3, hex2, hex1, hex0;
@@ -55,29 +54,34 @@ module stopwatch_main(clk, key3, key2, key1, key0, hex5, hex4, hex3, hex2, hex1,
 	show_time(time_display, hex5, hex4, hex3, hex2, hex1, hex0);
 	show_counting_status(time_counter, counting, led);
 
-	always @(negedge key3)
-		counting = ~counting;
-
-	always @(negedge key3 or negedge key2)
-		paused = !key3 ? 0 : ~paused; // Cannot write as `key3 ? ~paused : 0`!
-
-	always @(negedge key3 or negedge key1 or negedge key0) begin
-		if (!key3)
-			freeze_display = 0;
-		else if (!key0)
-			freeze_display = counting && !paused ? 0 : freeze_display;
-		else if (counting && !paused) // key1 pressed
-			freeze_display = 1;
+	always @(negedge key3 or negedge key2) begin
+		if (!key3) begin // Match sensitive signal list in if tests.
+			counting <= 0;
+			paused <= 0;
+		end
+		else begin // key2 pressed
+			if (!counting)
+				counting <= 1; // Start counting.
+			else
+				paused <= ~paused; // Toggle pause / resume.
+		end
 	end
 
-	always @(posedge clk or negedge key3 or negedge key1) begin
+	always @(posedge clk or negedge key3 or negedge key1 or negedge key0) begin
 		if (!key3) begin
 			time_counter <= 0;
 			time_display <= 0;
+			freeze_display <= 0;
 		end
-		else if (!key1) begin // begin-end required here!
+		else if (!key1) begin
+			if (counting && !paused) begin
+				freeze_display <= 1;
+				time_display <= time_counter;
+			end
+		end
+		else if (!key0) begin
 			if (counting && !paused)
-				time_display = time_counter;
+				freeze_display <= 0;
 		end
 		else begin // clk posedge
 			if (counting && !paused) begin
@@ -85,8 +89,6 @@ module stopwatch_main(clk, key3, key2, key1, key0, hex5, hex4, hex3, hex2, hex1,
 				if (!freeze_display)
 					time_display = time_counter;
 			end
-			else if (!counting)
-				time_display = 0;
 		end
 	end
 endmodule
