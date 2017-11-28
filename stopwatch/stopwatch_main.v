@@ -45,11 +45,11 @@ module stopwatch_main(clk, key3, key2, key1, key0, hex5, hex4, hex3, hex2, hex1,
 	parameter max_time = 360000 - 1;
 
 	initial begin
-		time_counter = 0;
-		time_display = 0;
-		counting = 0;
-		paused = 0;
-		freeze_display = 0;
+		time_counter <= 0;
+		time_display <= 0;
+		counting <= 0;
+		paused <= 0;
+		freeze_display <= 0;
 	end
 
 	show_time(time_display, hex5, hex4, hex3, hex2, hex1, hex0);
@@ -72,8 +72,8 @@ module stopwatch_main(clk, key3, key2, key1, key0, hex5, hex4, hex3, hex2, hex1,
 
 	always @(posedge clk or negedge key3 or negedge key1) begin
 		if (!key3) begin
-			time_counter = 0;
-			time_display = 0;
+			time_counter <= 0;
+			time_display <= 0;
 		end
 		else if (!key1) begin // begin-end required here!
 			if (counting && !paused)

@@ -4,8 +4,8 @@ module debouncer(clk, keyin, keyout);
 	output reg keyout;
 	reg        keyp;
 
-	always @(posedge clk) begin
-		if (keyp == keyin)
+	always @(posedge clk) begin // Check on every clk posedge (10ms).
+		if (keyp == keyin) // Propagate value when last value and current value is consistent.
 			keyout <= keyin;
 		keyp <= keyin;
 	end
