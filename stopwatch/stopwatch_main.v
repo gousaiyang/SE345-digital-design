@@ -62,7 +62,7 @@ module stopwatch_main(clk, key3, key2, key1, key0, hex5, hex4, hex3, hex2, hex1,
 		end
 		else begin // clk posedge
 			if (counting && !paused)
-				time_counter = time_counter == max_time ? 0 : time_counter + 1; // Increment counter.
+				time_counter <= time_counter == max_time ? 0 : time_counter + 1; // Increment counter.
 		end
 	end
 
@@ -73,11 +73,11 @@ module stopwatch_main(clk, key3, key2, key1, key0, hex5, hex4, hex3, hex2, hex1,
 		end
 		else if (!key1) begin
 			if (key1 != key1_last && counting && !paused) // Make sure state of key1 changes.
-				time_display = time_counter; // Update display.
+				time_display <= time_counter; // Update display.
 		end
 		else begin // clk posedge
 			if (counting && !paused && !freeze_display)
-				time_display = time_counter; // Update display.
+				time_display <= time_counter; // Update display.
 		end
 	end
 
