@@ -17,6 +17,6 @@ module alu(a, b, aluc, s, z);
 			4'b1111: s = $signed(b) >>> a; //1111 SRA: rd <- (rt >> sa) (arithmetic)
 			default: s = 0;
 		endcase
-		z = (s == 0) ? 1 : 0;
+		z = (s == 0) ? 1'b1 : 1'b0;
 	end
 endmodule

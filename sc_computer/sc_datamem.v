@@ -8,5 +8,5 @@ module sc_datamem(addr, datain, dataout, we, clock, mem_clk, dmem_clk);
 	assign write_enable = we & ~clock;
 	assign dmem_clk = mem_clk & ~clock;
 
-	lpm_ram_dq_dram dram(addr[6:2], dmem_clk, datain, write_enable, dataout);
+	ram_1port dram(addr[6:2], dmem_clk, datain, write_enable, dataout);
 endmodule

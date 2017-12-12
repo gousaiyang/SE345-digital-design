@@ -12,6 +12,6 @@ module sc_computer(resetn, clock, mem_clk, pc, inst, aluout, memout, imem_clk, d
 	wire          wmem;
 
 	sc_cpu cpu(clock, resetn, inst, memout, pc, wmem, aluout, data); // CPU module.
-	sc_instmem imem(pc, inst, clock, mem_clk, imem_clk); // instruction memory.
-	sc_datamem dmem(aluout, data, memout, wmem, clock, mem_clk, dmem_clk); // data memory.
+	sc_instmem imem(pc, inst, clock, mem_clk, imem_clk); // Instruction memory.
+	sc_datamem dmem(aluout, data, memout, wmem, clock, mem_clk, dmem_clk); // Data memory.
 endmodule
