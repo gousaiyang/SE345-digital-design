@@ -6,8 +6,8 @@ module dff32(d, clk, clrn, q);
 
 	always @ (negedge clrn or posedge clk)
 		if (clrn == 0) begin
-			// q <= 0;
-			q <= -4;
+			q <= 0;
+			// q <= -4;
 		end else begin
 			q <= d;
 		end
