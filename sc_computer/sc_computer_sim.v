@@ -40,7 +40,7 @@ module sc_computer_sim;
 
 	// wire        wmem_sim; // connect the cpu and dmem.
 
-	sc_computer sc_computer_instance(resetn_sim, clock_50M_sim, mem_clk_sim,
+	sc_computer_main sc_computer_instance(resetn_sim, clock_50M_sim, mem_clk_sim,
 		pc_sim, inst_sim, aluout_sim, memout_sim, imem_clk_sim, dmem_clk_sim/*,
 		out_port0_sim,out_port1_sim,in_port0_sim,in_port1_sim,
 		mem_dataout_sim,data_sim,io_read_data_sim*/);

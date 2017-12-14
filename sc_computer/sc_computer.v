@@ -4,14 +4,21 @@
 //                                                         //
 /////////////////////////////////////////////////////////////
 
-module sc_computer(resetn, clock, mem_clk, pc, inst, aluout, memout, imem_clk, dmem_clk);
+module sc_computer_main(resetn, clock, mem_clk, pc, inst, aluout, memout, imem_clk, dmem_clk,
+	sw9, sw8, sw7, sw6, sw5, sw4, sw3, sw2, sw1, sw0, key3, key2, key1, key0,
+	hex5, hex4, hex3, hex2, hex1, hex0, led);
 	input         resetn, clock, mem_clk;
+	input         sw9, sw8, sw7, sw6, sw5, sw4, sw3, sw2, sw1, sw0, key3, key2, key1, key0;
 	output [31:0] pc, inst, aluout, memout;
 	output        imem_clk, dmem_clk;
+	output [6:0]  hex5, hex4, hex3, hex2, hex1, hex0;
+	output [9:0]  led;
 	wire   [31:0] data;
 	wire          wmem;
 
 	sc_cpu cpu(clock, resetn, inst, memout, pc, wmem, aluout, data); // CPU module.
 	sc_instmem imem(pc, inst, clock, mem_clk, imem_clk); // Instruction memory.
-	sc_datamem dmem(aluout, data, memout, wmem, clock, mem_clk, dmem_clk); // Data memory.
+	sc_datamem dmem(aluout, data, memout, wmem, clock, mem_clk, dmem_clk,
+		sw9, sw8, sw7, sw6, sw5, sw4, sw3, sw2, sw1, sw0, key3, key2, key1, key0,
+		hex5, hex4, hex3, hex2, hex1, hex0, led); // Data memory.
 endmodule
