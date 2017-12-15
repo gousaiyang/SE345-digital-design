@@ -6,7 +6,7 @@ DATA_RADIX = HEX; % Enter BIN, DEC, HEX, or OCT; unless %
 CONTENT
 BEGIN
  0 : 8c01ff00; % loop:   lw $1, ff00($0) # load state of switches to $1 %
- 1 : ac01ff00; %         sw $1, ff80($0) # store $1 to state of leds    %
+ 1 : ac01ff80; %         sw $1, ff80($0) # store $1 to state of leds    %
  2 : 08000000; %         j loop                                         %
  3 : 00000020; %         add $0, $0, $0                                 %
  4 : 00000020; %         add $0, $0, $0                                 %

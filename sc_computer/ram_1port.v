@@ -170,5 +170,5 @@ endmodule
 // Retrieval info: GEN_FILE: TYPE_NORMAL ram_1port.cmp FALSE
 // Retrieval info: GEN_FILE: TYPE_NORMAL ram_1port.bsf TRUE FALSE
 // Retrieval info: GEN_FILE: TYPE_NORMAL ram_1port_inst.v FALSE
-// Retrieval info: GEN_FILE: TYPE_NORMAL ram_1port_bb.v TRUE
+// Retrieval info: GEN_FILE: TYPE_NORMAL ram_1port_bb.v FALSE
 // Retrieval info: LIB_FILE: altera_mf

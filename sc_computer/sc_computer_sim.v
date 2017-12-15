@@ -37,13 +37,35 @@ module sc_computer_sim;
 	// wire [31:0] mem_dataout_sim; // to check data_mem output
 	// wire [31:0] data_sim;
 	// wire [31:0] io_read_data_sim;
+	reg         sw9, sw8, sw7, sw6, sw5, sw4, sw3, sw2, sw1, sw0, key3, key2, key1, key0;
+	wire [6:0]  hex5, hex4, hex3, hex2, hex1, hex0;
+	wire [9:0]  led;
+
+	initial begin
+		sw9 <= 1;
+		sw8 <= 0;
+		sw7 <= 1;
+		sw6 <= 0;
+		sw5 <= 1;
+		sw4 <= 0;
+		sw3 <= 1;
+		sw2 <= 0;
+		sw1 <= 1;
+		sw0 <= 0;
+		key3 <= 1;
+		key2 <= 1;
+		key1 <= 1;
+		key0 <= 1;
+	end
 
 	// wire        wmem_sim; // connect the cpu and dmem.
 
 	sc_computer_main sc_computer_instance(resetn_sim, clock_50M_sim, mem_clk_sim,
-		pc_sim, inst_sim, aluout_sim, memout_sim, imem_clk_sim, dmem_clk_sim/*,
+		pc_sim, inst_sim, aluout_sim, memout_sim, imem_clk_sim, dmem_clk_sim,
+		sw9, sw8, sw7, sw6, sw5, sw4, sw3, sw2, sw1, sw0, key3, key2, key1, key0,
+		hex5, hex4, hex3, hex2, hex1, hex0, led);/*,
 		out_port0_sim,out_port1_sim,in_port0_sim,in_port1_sim,
-		mem_dataout_sim,data_sim,io_read_data_sim*/);
+		mem_dataout_sim,data_sim,io_read_data_sim);*/
 
 // module sc_computer (resetn,clock,mem_clk,pc,inst,aluout,memout,imem_clk,dmem_clk,out_port0,out_port1,in_port0,in_port1,mem_dataout,data,io_read_data);
 
