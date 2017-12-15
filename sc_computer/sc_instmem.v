@@ -7,6 +7,4 @@ module sc_instmem(addr, inst, clock, mem_clk, imem_clk);
 	assign imem_clk = clock & ~mem_clk;
 
 	rom_1port irom(addr[6:2], imem_clk, inst);
-	// assign inst = 32'h12345678;
-
 endmodule

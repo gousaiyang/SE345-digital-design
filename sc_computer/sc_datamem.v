@@ -1,9 +1,9 @@
 module sc_datamem(addr, datain, dataout, we, clock, mem_clk, dmem_clk,
-	sw9, sw8, sw7, sw6, sw5, sw4, sw3, sw2, sw1, sw0, key3, key2, key1, key0,
-	hex5, hex4, hex3, hex2, hex1, hex0, led);
+	sw, key, hex5, hex4, hex3, hex2, hex1, hex0, led);
 	input      [31:0]  addr, datain;
 	input              we, clock, mem_clk;
-	input              sw9, sw8, sw7, sw6, sw5, sw4, sw3, sw2, sw1, sw0, key3, key2, key1, key0;
+	input      [9:0]   sw;
+	input      [3:0]   key;
 	output reg [31:0]  dataout;
 	output             dmem_clk;
 	output reg [6:0]   hex5, hex4, hex3, hex2, hex1, hex0;
@@ -29,8 +29,8 @@ module sc_datamem(addr, datain, dataout, we, clock, mem_clk, dmem_clk,
 			endcase
 		end else begin // read
 			case (addr)
-				32'hffffff00: dataout = {22'b0, sw9, sw8, sw7, sw6, sw5, sw4, sw3, sw2, sw1, sw0};
-				32'hffffff10: dataout = {28'b0, key3, key2, key1, key0};
+				32'hffffff00: dataout = {22'b0, sw};
+				32'hffffff10: dataout = {28'b0, key};
 				default: dataout = mem_dataout;
 			endcase
 		end
