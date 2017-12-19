@@ -6,5 +6,5 @@ module sc_instmem(addr, inst, clock, mem_clk, imem_clk);
 
 	assign imem_clk = clock & ~mem_clk;
 
-	rom_1port irom(addr[6:2], imem_clk, inst);
+	rom_1port irom(addr[7:2], imem_clk, inst);
 endmodule

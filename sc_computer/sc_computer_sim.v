@@ -28,6 +28,8 @@ module sc_computer_sim;
 	reg         mem_clk_sim;
 	wire [31:0] pc_sim, inst_sim, aluout_sim, memout_sim;
 	wire        imem_clk_sim, dmem_clk_sim;
+	wire [31:0] data_sim;
+	wire        wmem_sim;
 	reg  [9:0]  sw;
 	reg  [3:0]  key;
 	wire [6:0]  hex5, hex4, hex3, hex2, hex1, hex0;
@@ -39,8 +41,8 @@ module sc_computer_sim;
 	end
 
 	sc_computer_main sc_computer_instance(resetn_sim, clock_50M_sim, mem_clk_sim,
-		pc_sim, inst_sim, aluout_sim, memout_sim, imem_clk_sim, dmem_clk_sim,
-		sw, key, hex5, hex4, hex3, hex2, hex1, hex0, led);
+		pc_sim, inst_sim, aluout_sim, memout_sim, imem_clk_sim, dmem_clk_sim, data_sim, wmem_sim,
+		sw, /*key,*/ hex5, hex4, hex3, hex2, hex1, hex0, led);
 
 	initial begin
 		clock_50M_sim = 1;
@@ -62,7 +64,7 @@ module sc_computer_sim;
 
 	initial begin
 		while (1)
-			#20	sw = ~sw;
+			#600 sw = ~sw;
 	end
 
 	initial begin
