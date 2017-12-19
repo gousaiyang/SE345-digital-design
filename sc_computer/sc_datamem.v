@@ -17,6 +17,7 @@ module sc_datamem(resetn, addr, datain, dataout, we, clock, mem_clk, dmem_clk,
 
 	ram_1port dram(addr[6:2], dmem_clk, datain, write_enable, mem_dataout);
 
+	// IO ports design.
 	always @(posedge dmem_clk or negedge resetn) begin
 		if (!resetn) begin // reset hexs and leds
 			hex0 <= 7'b1111111;
@@ -42,7 +43,7 @@ module sc_datamem(resetn, addr, datain, dataout, we, clock, mem_clk, dmem_clk,
 	always @(posedge dmem_clk) begin // read when dmem_clk posedge comes
 		case (addr)
 			32'hffffff00: dataout <= {22'b0, sw};
-			32'hffffff10: dataout <= {28'b0, key, 1'b1};
+			32'hffffff10: dataout <= {28'b0, key, 1'b1}; // can only read key[3..1], key0 is used for reset
 			default: dataout <= mem_dataout;
 		endcase
 	end

@@ -1,3 +1,4 @@
+// Generate a clock whose period is N times the period of the reference clock.
 module clock_adjust(refclk, resetn, outclk);
 	input      refclk, resetn;
 	output reg outclk;

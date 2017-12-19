@@ -1,8 +1,8 @@
 module sc_cpu(clock, resetn, inst, mem, pc, wmem, alu, data);
-	input  [31:0]   inst, mem;
-	input           clock, resetn;
-	output [31:0]   pc, alu, data;
-	output          wmem;
+	input  [31:0] inst, mem;
+	input         clock, resetn;
+	output [31:0] pc, alu, data;
+	output        wmem;
 
 	/* inst: the fetched instruction
 	 * mem: result of a data memory read
@@ -16,17 +16,17 @@ module sc_cpu(clock, resetn, inst, mem, pc, wmem, alu, data);
 	 * reg_dest: candidate of register number to write
 	 * wn: register number to write
 	 */
-	wire   [31:0]   p4, npc, adr, ra, alua, alub, res, alu_mem;
-	wire   [3:0]    aluc;
-	wire   [4:0]    reg_dest, wn;
-	wire   [1:0]    pcsource;
-	wire            zero, wmem, wreg, regrt, m2reg, shift, aluimm, jal, sext;
-	wire   [31:0]   sa = {27'b0, inst[10:6]}; // extend sa to 32 bits for shift instruction
-	wire            e = sext & inst[15]; // the bit to extend
-	wire   [15:0]   imm = {16{e}}; // high 16 sign bit when sign extend (otherwise 0)
-	wire   [31:0]   offset = {imm[13:0], inst[15:0], 2'b00}; // branch addr offset (include extend)
-	wire   [31:0]   immediate = {imm, inst[15:0]}; // extend immediate to high 16
-	wire   [31:0]   jpc = {p4[31:28], inst[25:0], 2'b00}; // j address
+	wire   [31:0] p4, npc, adr, ra, alua, alub, res, alu_mem;
+	wire   [3:0]  aluc;
+	wire   [4:0]  reg_dest, wn;
+	wire   [1:0]  pcsource;
+	wire          zero, wmem, wreg, regrt, m2reg, shift, aluimm, jal, sext;
+	wire   [31:0] sa = {27'b0, inst[10:6]}; // extend sa to 32 bits for shift instruction
+	wire          e = sext & inst[15]; // the bit to extend
+	wire   [15:0] imm = {16{e}}; // high 16 sign bit when sign extend (otherwise 0)
+	wire   [31:0] offset = {imm[13:0], inst[15:0], 2'b00}; // branch addr offset (include extend)
+	wire   [31:0] immediate = {imm, inst[15:0]}; // extend immediate to high 16
+	wire   [31:0] jpc = {p4[31:28], inst[25:0], 2'b00}; // j address
 
 	assign p4 = pc + 32'h4; // pc + 4
 	assign adr = p4 + offset; // branch addr

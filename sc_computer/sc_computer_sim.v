@@ -44,27 +44,34 @@ module sc_computer_sim;
 		pc_sim, inst_sim, aluout_sim, memout_sim, imem_clk_sim, dmem_clk_sim, data_sim, wmem_sim,
 		sw, key, hex5, hex4, hex3, hex2, hex1, hex0, led);
 
-	initial begin
+	initial begin // Generate clock.
 		clock_50M_sim = 1;
 		while (1)
 			#2 clock_50M_sim = ~clock_50M_sim;
 	end
 
-	initial begin
+	initial begin // Generate mem_clk.
 		mem_clk_sim = 1;
 		while (1)
 			#1 mem_clk_sim = ~mem_clk_sim;
 	end
 
-	initial begin
-		resetn_sim = 0; // 低电平持续 10 个时间单位，后一直为 1。
+	initial begin // Generate a reset signal at the start.
+		resetn_sim = 0;
 		while (1)
 			#5 resetn_sim = 1;
 	end
 
-	initial begin
-		while (1)
-			#600 sw = ~sw;
+	initial begin // Simulate switch changes.
+		#1800 sw = ~sw;
+	end
+
+	initial begin // Simulate key presses.
+		while (1) begin
+			#600 key <= 3'b101; // key2 pressed, should change to sub mode
+			#600 key <= 3'b110; // key1 pressed, should change to xor mode
+			#600 key <= 3'b011; // key3 pressed, should change to add mode
+		end
 	end
 
 	initial begin
