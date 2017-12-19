@@ -52,6 +52,13 @@ applicable agreement for further details.
 		(line (pt 0 80)(pt 16 80)(line_width 3))
 	)
 	(port
+		(pt 0 96)
+		(input)
+		(text "key[3..1]" (rect 0 0 34 12)(font "Arial" ))
+		(text "key[3..1]" (rect 21 91 55 103)(font "Arial" ))
+		(line (pt 0 96)(pt 16 96)(line_width 3))
+	)
+	(port
 		(pt 192 32)
 		(output)
 		(text "pc[31..0]" (rect 0 0 33 12)(font "Arial" ))

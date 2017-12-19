@@ -1,51 +1,78 @@
-DEPTH = 64;           % Memory depth and width are required %
+DEPTH = 128;          % Memory depth and width are required %
 WIDTH = 32;           % Enter a decimal number %
 ADDRESS_RADIX = HEX;  % Address and value radixes are optional %
 DATA_RADIX = HEX;     % Enter BIN, DEC, HEX, or OCT; unless %
                       % otherwise specified, radixes = HEX %
 CONTENT
 BEGIN
-[0..3F] : 00000000;   % Range--Every address from 0 to 1F = 00000000 %
+[0..7F] : 00000000;   % Range--Every address from 0 to 1F = 00000000 %
 
- 0 : 08000019;        % (00) start:      j main_loop              #                                                        %
- 1 : 001ef080;        % (04) sevenseg:   sll $30, $30, 2          # calculate sevenseg table item addr to load             %
- 2 : 8fdd0000;        % (08)             lw $29, 0($30)           # load sevenseg code of arg($30) from data memory to $29 %
- 3 : 03e00008;        % (0c)             jr $ra                   # return                                                 %
- 4 : 201bffff;        % (10) split:      addi $27, $0, -1         # store 32'bffffffff to $27                              %
- 5 : 0000e820;        % (14)             add $29, $0, $0          # $29 stores tens digit                                  %
- 6 : 23defff6;        % (18) split_loop: addi $30, $30, -10       # decrement arg($30) by 10                               %
- 7 : 001ee7c3;        % (1c)             sra $28, $30, 31         # extend sign digit of the result                        %
- 8 : 139b0002;        % (20)             beq $28, $27, split_done # if $30 has become negative, goto split_done            %
- 9 : 23bd0001;        % (24)             addi $29, $29, 1         # increment tens digit                                   %
- A : 08000006;        % (28)             j split_loop             #                                                        %
- B : 23dc000a;        % (2c) split_done: addi $28, $30, 10        # get units digit and store to $28                       %
- C : 03e00008;        % (30)             jr $ra                   # return                                                 %
- D : 03e0a020;        % (34) show:       add $20, $31, $0         # store return address to $20                            %
- E : 001dd140;        % (38)             sll $26, $29, 5          # $26 = 32 * $29(arg2, pos)                              %
- F : 235aff20;        % (3c)             addi $26, $26, 0xff20    # calculate sevenseg pair base addr and store to $26     %
-10 : 0c000004;        % (40)             jal split                # call split (passing $30, arg1, value)                  %
-11 : 03a0f020;        % (44)             add $30, $29, $0         # move $29(returned tens digit) to $30                   %
-12 : 0c000001;        % (48)             jal sevenseg             # call split (passing $30)                               %
-13 : af5d0010;        % (4c)             sw $29, 16($26)          # show sevenseg tens digit                               %
-14 : 0380f020;        % (50)             add $30, $28, $0         # move $28(returned units digit) to $30                  %
-15 : 0c000001;        % (54)             jal sevenseg             # call split (passing $30)                               %
-16 : af5d0000;        % (58)             sw $29, 0($26)           # show sevenseg units digit                              %
-17 : 0280f820;        % (5c)             add $31, $20, $0         # restore return address                                 %
-18 : 03e00008;        % (60)             jr $ra                   # return                                                 %
-19 : 8c01ff00;        % (64) main_loop:  lw $1, 65280($0)         # load state of switches to $1                           %
-1A : ac01ff80;        % (68)             sw $1, 65408($0)         # store $1 to state of leds                              %
-1B : 302203e0;        % (6c)             andi $2, $1, 0x3e0       # calculate value1 and store to $2                       %
-1C : 00011142;        % (70)             srl $2, $1, 5            # calculate value1 and store to $2                       %
-1D : 3023001f;        % (74)             andi $3, $1, 0x1f        # calculate value2 and store to $3                       %
-1E : 00432020;        % (78)             add $4, $2, $3           # calculate sum of value1 and value2                     %
-1F : 0080f020;        % (7c)             add $30, $4, $0          # move $4(sum) to $30                                    %
-20 : 201d0000;        % (80)             addi $29, $0, 0          # set pos to 0 (right pair)                              %
-21 : 0c00000d;        % (84)             jal show                 # call show (passing $30 and $29)                        %
-22 : 0040f020;        % (88)             add $30, $2, $0          # move $2(value1) to $30                                 %
-23 : 201d0002;        % (8c)             addi $29, $0, 2          # set pos to 2 (left pair)                               %
-24 : 0c00000d;        % (90)             jal show                 # call show (passing $30 and $29)                        %
-25 : 0060f020;        % (94)             add $30, $3, $0          # move $3(value2) to $30                                 %
-26 : 201d0001;        % (98)             addi $29, $0, 1          # set pos to 1 (middle pair)                             %
-27 : 0c00000d;        % (9c)             jal show                 # call show (passing $30 and $29)                        %
-28 : 08000019;        % (a0)             j main_loop              # loop forever                                           %
+ 0 : 3c070000;        % (000) start:      lui $7, 0               # $7 stores op (0->add (default), 1->sub, 2->xor)        %
+ 1 : 08000033;        % (004)             j main_loop             # enter main loop                                        %
+ 2 : 001ef080;        % (008) sevenseg:   sll $30, $30, 2         # calculate sevenseg table item addr to load             %
+ 3 : 8fdd0000;        % (00c)             lw $29, 0($30)          # load sevenseg code of arg($30) from data memory to $29 %
+ 4 : 03e00008;        % (010)             jr $ra                  # return                                                 %
+ 5 : 0000e820;        % (014) split:      add $29, $0, $0         # $29 stores tens digit                                  %
+ 6 : 23defff6;        % (018) split_loop: addi $30, $30, -10      # decrement arg($30) by 10                               %
+ 7 : 001ee7c3;        % (01c)             sra $28, $30, 31        # extend sign digit of the result                        %
+ 8 : 17800002;        % (020)             bne $28, $0, split_done # if $30 has become negative, goto split_done            %
+ 9 : 23bd0001;        % (024)             addi $29, $29, 1        # increment tens digit                                   %
+ A : 08000006;        % (028)             j split_loop            # continue loop                                          %
+ B : 23dc000a;        % (02c) split_done: addi $28, $30, 10       # get units digit and store to $28                       %
+ C : 03e00008;        % (030)             jr $ra                  # return                                                 %
+ D : 03e0a020;        % (034) show:       add $20, $31, $0        # store return address to $20                            %
+ E : 001dd140;        % (038)             sll $26, $29, 5         # $26 = 32 * $29(arg2, pos)                              %
+ F : 235aff20;        % (03c)             addi $26, $26, 0xff20   # calculate sevenseg pair base addr and store to $26     %
+10 : 0c000005;        % (040)             jal split               # call split (passing $30, arg1, value)                  %
+11 : 03a0f020;        % (044)             add $30, $29, $0        # move $29(returned tens digit) to $30                   %
+12 : 0c000002;        % (048)             jal sevenseg            # call split (passing $30)                               %
+13 : af5d0010;        % (04c)             sw $29, 16($26)         # show sevenseg tens digit                               %
+14 : 0380f020;        % (050)             add $30, $28, $0        # move $28(returned units digit) to $30                  %
+15 : 0c000002;        % (054)             jal sevenseg            # call split (passing $30)                               %
+16 : af5d0000;        % (058)             sw $29, 0($26)          # show sevenseg units digit                              %
+17 : 0280f820;        % (05c)             add $31, $20, $0        # restore return address                                 %
+18 : 03e00008;        % (060)             jr $ra                  # return                                                 %
+19 : 8c05ff10;        % (064) get_op:     lw $5, 65296($0)        # load state of keys to $5                               %
+1A : 2006ffff;        % (068)             addi $6, $0, -1         # store 32'bffffffff to $6                               %
+1B : 00a62826;        % (06c)             xor $5, $5, $6          # $5 = ~$5                                               %
+1C : 30a60008;        % (070)             andi $6, $5, 0x8        # get state of key3                                      %
+1D : 14c00005;        % (074)             bne $6, $0, add_op      # if key3 is pressed, change op to add                   %
+1E : 30a60004;        % (078)             andi $6, $5, 0x4        # get state of key2                                      %
+1F : 14c00004;        % (07c)             bne $6, $0, sub_op      # if key2 is pressed, change op to sub                   %
+20 : 30a60002;        % (080)             andi $6, $5, 0x2        # get state of key1                                      %
+21 : 14c00003;        % (084)             bne $6, $0, xor_op      # if key1 is pressed, change op to xor                   %
+22 : 03e00008;        % (088)             jr $ra                  # no key pressed, no op change, return                   %
+23 : 20c6fffb;        % (08c) add_op:     addi $6, $6, -5         # calculate new opcode                                   %
+24 : 20c6fffd;        % (090) sub_op:     addi $6, $6, -3         # calculate new opcode                                   %
+25 : 00c03820;        % (094) xor_op:     add $7, $6, $0          # calculate new opcode and store to $7                   %
+26 : 03e00008;        % (098)             jr $ra                  # return                                                 %
+27 : 14e00002;        % (09c) do_op:      bne $7, $0, not_add     # check if op is add                                     %
+28 : 00432020;        % (0a0)             add $4, $2, $3          # do add                                                 %
+29 : 03e00008;        % (0a4)             jr $ra                  # return                                                 %
+2A : 20e8ffff;        % (0a8) not_add:    addi $8, $7, -1         # check if op is sub                                     %
+2B : 15000005;        % (0ac)             bne $8, $0, not_sub     # check if op is sub                                     %
+2C : 00432022;        % (0b0)             sub $4, $2, $3          # do sub                                                 %
+2D : 00042fc3;        % (0b4)             sra $5, $4, 31          # extend sign digit of the result                        %
+2E : 10a00001;        % (0b8)             beq $5, $0, sub_done    # result is positive, done                               %
+2F : 00042022;        % (0bc)             sub $4, $0, $4          # result = -result (get abs of result)                   %
+30 : 03e00008;        % (0c0) sub_done:   jr $ra                  # return                                                 %
+31 : 00432026;        % (0c4) not_sub:    xor $4, $2, $3          # do xor                                                 %
+32 : 03e00008;        % (0c8)             jr $ra                  # return                                                 %
+33 : 8c01ff00;        % (0cc) main_loop:  lw $1, 65280($0)        # load state of switches to $1                           %
+34 : ac01ff80;        % (0d0)             sw $1, 65408($0)        # store $1 to state of leds                              %
+35 : 302203e0;        % (0d4)             andi $2, $1, 0x3e0      # calculate value1 and store to $2                       %
+36 : 00011142;        % (0d8)             srl $2, $1, 5           # calculate value1 and store to $2                       %
+37 : 3023001f;        % (0dc)             andi $3, $1, 0x1f       # calculate value2 and store to $3                       %
+38 : 0c000019;        % (0e0)             jal get_op              # call get_op                                            %
+39 : 0c000027;        % (0e4)             jal do_op               # call do_op (passing $2 and $3)                         %
+3A : 0080f020;        % (0e8)             add $30, $4, $0         # move $4(result) to $30                                 %
+3B : 201d0000;        % (0ec)             addi $29, $0, 0         # set pos to 0 (right pair)                              %
+3C : 0c00000d;        % (0f0)             jal show                # call show (passing $30 and $29)                        %
+3D : 0040f020;        % (0f4)             add $30, $2, $0         # move $2(value1) to $30                                 %
+3E : 201d0002;        % (0f8)             addi $29, $0, 2         # set pos to 2 (left pair)                               %
+3F : 0c00000d;        % (0fc)             jal show                # call show (passing $30 and $29)                        %
+40 : 0060f020;        % (100)             add $30, $3, $0         # move $3(value2) to $30                                 %
+41 : 201d0001;        % (104)             addi $29, $0, 1         # set pos to 1 (middle pair)                             %
+42 : 0c00000d;        % (108)             jal show                # call show (passing $30 and $29)                        %
+43 : 08000033;        % (10c)             j main_loop             # loop forever                                           %
 END ;
