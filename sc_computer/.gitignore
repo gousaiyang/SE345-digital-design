@@ -70,6 +70,8 @@
 ~$*.xls
 ~$*.xlsx
 
+!*.pdf
+
 !*.s
 
 # End of https://www.gitignore.io/api/alteraquartusii
