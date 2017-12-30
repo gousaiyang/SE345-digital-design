@@ -1,0 +1,40 @@
+DEPTH = 32; % Memory depth and width are required %
+WIDTH = 32; % Enter a decimal number %
+ADDRESS_RADIX = HEX; % Address and value radixes are optional %
+DATA_RADIX = HEX; % Enter BIN, DEC, HEX, or OCT; unless %
+% otherwise specified, radixes = HEX %
+CONTENT
+BEGIN
+ 0 : 8c01ff00; % loop:   lw $1, ff00($0) # load state of switches to $1 %
+ 1 : ac01ff80; %         sw $1, ff80($0) # store $1 to state of leds    %
+ 2 : 08000000; %         j loop                                         %
+ 3 : 00000020; %         add $0, $0, $0                                 %
+ 4 : 00000020; %         add $0, $0, $0                                 %
+ 5 : 00000020; %         add $0, $0, $0                                 %
+ 6 : 00000020; %         add $0, $0, $0                                 %
+ 7 : 00000020; %         add $0, $0, $0                                 %
+ 8 : 00000020; %         add $0, $0, $0                                 %
+ 9 : 00000020; %         add $0, $0, $0                                 %
+ A : 00000020; %         add $0, $0, $0                                 %
+ B : 00000020; %         add $0, $0, $0                                 %
+ C : 00000020; %         add $0, $0, $0                                 %
+ D : 00000020; %         add $0, $0, $0                                 %
+ E : 00000020; %         add $0, $0, $0                                 %
+ F : 00000020; %         add $0, $0, $0                                 %
+10 : 00000020; %         add $0, $0, $0                                 %
+11 : 00000020; %         add $0, $0, $0                                 %
+12 : 00000020; %         add $0, $0, $0                                 %
+13 : 00000020; %         add $0, $0, $0                                 %
+14 : 00000020; %         add $0, $0, $0                                 %
+15 : 00000020; %         add $0, $0, $0                                 %
+16 : 00000020; %         add $0, $0, $0                                 %
+17 : 00000020; %         add $0, $0, $0                                 %
+18 : 00000020; %         add $0, $0, $0                                 %
+19 : 00000020; %         add $0, $0, $0                                 %
+1A : 00000020; %         add $0, $0, $0                                 %
+1B : 00000020; %         add $0, $0, $0                                 %
+1C : 00000020; %         add $0, $0, $0                                 %
+1D : 00000020; %         add $0, $0, $0                                 %
+1E : 00000020; %         add $0, $0, $0                                 %
+1F : 00000020; %         add $0, $0, $0                                 %
+END ;
