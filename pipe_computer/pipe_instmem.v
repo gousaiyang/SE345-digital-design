@@ -1,10 +1,7 @@
-module pipe_instmem(addr, inst, clock, mem_clk, imem_clk);
+module pipe_instmem(addr, inst, rom_clock);
 	input  [31:0] addr;
-	input         clock, mem_clk;
+	input         rom_clock;
 	output [31:0] inst;
-	output        imem_clk;
 
-	assign imem_clk = clock & ~mem_clk;
-
-	rom_1port irom(addr[8:2], imem_clk, inst);
+	rom_1port irom(addr[8:2], rom_clock, inst);
 endmodule

@@ -1,9 +1,9 @@
 module mux4x32(a0, a1, a2, a3, s, y);
-	input      [31:0]  a0, a1, a2, a3;
-	input      [1:0]   s;
-	output reg [31:0]  y;
+	input      [31:0] a0, a1, a2, a3;
+	input      [1:0]  s;
+	output reg [31:0] y;
 
-	always @ (*)
+	always @(*)
 		case (s)
 			2'b00: y = a0;
 			2'b01: y = a1;
