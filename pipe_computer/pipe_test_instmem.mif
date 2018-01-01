@@ -1,0 +1,111 @@
+DEPTH = 128;           % Memory depth and width are required %
+WIDTH = 32;           % Enter a decimal number %
+ADDRESS_RADIX = HEX;  % Address and value radixes are optional %
+DATA_RADIX = HEX;     % Enter BIN, DEC, HEX, or OCT; unless %
+                      % otherwise specified, radixes = HEX %
+CONTENT
+BEGIN
+[0..7F] : 00000000;   % Range--Every address from 0 to 1F = 00000000 %
+
+ 0 : 8c1e0000;        % (000) start:     lw $30, 0($0)         # load sevenseg code for '-' from datamem   %
+ 1 : 8c1d0004;        % (004)            lw $29, 4($0)         # load sevenseg code for 'P' from datamem   %
+ 2 : 8c1c0008;        % (008)            lw $28, 8($0)         # load sevenseg code for 'A' from datamem   %
+ 3 : 8c1b000c;        % (00c)            lw $27, 12($0)        # load sevenseg code for 'S' from datamem   %
+ 4 : 8c1a0010;        % (010)            lw $26, 16($0)        # load sevenseg code for 'F' from datamem   %
+ 5 : 8c190014;        % (014)            lw $25, 20($0)        # load sevenseg code for 'I' from datamem   %
+ 6 : 8c180018;        % (018)            lw $24, 24($0)        # load sevenseg code for 'L' from datamem   %
+ 7 : 08000010;        % (01c)            j main                # enter test program                        %
+ 8 : 00000020;        % (020)            add $0, $0, $0        # nop padding                               %
+ 9 : ac1eff70;        % (024) test_fail: sw $30, 65392($0)     # display '-' at hex5                       %
+ A : ac1aff60;        % (028)            sw $26, 65376($0)     # display 'F' at hex4                       %
+ B : ac1cff50;        % (02c)            sw $28, 65360($0)     # display 'A' at hex3                       %
+ C : ac19ff40;        % (030)            sw $25, 65344($0)     # display 'I' at hex2                       %
+ D : ac18ff30;        % (034)            sw $24, 65328($0)     # display 'L' at hex1                       %
+ E : ac1eff20;        % (038)            sw $30, 65312($0)     # display '-' at hex0                       %
+ F : 08000063;        % (03c)            j end                 # halt the program                          %
+10 : 3c010000;        % (040) main:      lui $1, 0             # $1 <- 0                                   %
+11 : 08000014;        % (044)            j s1                  # test delay slot of 'j'                    %
+12 : 20010001;        % (048)            addi $1, $0, 1        # $1 <- 1 should be executed before jumping %
+13 : 20010002;        % (04c)            addi $1, $0, 2        # should not come here                      %
+14 : 20020001;        % (050) s1:        addi $2, $0, 1        # $2 <- 1                                   %
+15 : 1422fff3;        % (054)            bne $1, $2, test_fail # check $1 == 1                             %
+16 : 00000020;        % (058)            add $0, $0, $0        # nop padding                               %
+17 : 14010001;        % (05c)            bne $0, $1, s2        # test delay slot of 'bne'                  %
+18 : 00200824;        % (060)            and $1, $1, $0        # $1 <- 0 should be executed before jumping %
+19 : 1401ffef;        % (064) s2:        bne $0, $1, test_fail # check $1 == 0                             %
+1A : 00000020;        % (068)            add $0, $0, $0        # nop padding                               %
+1B : 10010001;        % (06c)            beq $0, $1, s3        # test delay slot of 'beq'                  %
+1C : 34210001;        % (070)            ori $1, $1, 1         # $1 <- 1 should be executed before jumping %
+1D : 1001ffeb;        % (074) s3:        beq $0, $1, test_fail # check $1 != 0                             %
+1E : 00000020;        % (078)            add $0, $0, $0        # nop padding                               %
+1F : 0c000023;        % (07c)            jal s4                # test delay slot of 'jal'                  %
+20 : 00210826;        % (080)            xor $1, $1, $1        # $1 <- 0 should be executed before call    %
+21 : 08000027;        % (084)            j s5                  # should return here (PC + 8) and goto s5   %
+22 : 00000020;        % (088)            add $0, $0, $0        # nop padding                               %
+23 : 1401ffe5;        % (08c) s4:        bne $0, $1, test_fail # check $1 == 0                             %
+24 : 00000020;        % (090)            add $0, $0, $0        # nop padding                               %
+25 : 03e00008;        % (094)            jr $ra                # test delay slot of 'jr'                   %
+26 : 38010002;        % (098)            xori $1, $0, 2        # $1 <- 2 should be executed before return  %
+27 : 20420001;        % (09c) s5:        addi $2, $2, 1        # $2 <- 2                                   %
+28 : 1422ffe0;        % (0a0)            bne $1, $2, test_fail # check $1 == 2                             %
+29 : 00210820;        % (0a4)            add $1, $1, $1        # $1 <- 4                                   %
+2A : 00210820;        % (0a8)            add $1, $1, $1        # test forwarding, $1 should be 8           %
+2B : 00210820;        % (0ac)            add $1, $1, $1        # test forwarding, $1 should be 16          %
+2C : 00210820;        % (0b0)            add $1, $1, $1        # test forwarding, $1 should be 32          %
+2D : 00021100;        % (0b4)            sll $2, $2, 4         # $2 <- 32                                  %
+2E : 1422ffda;        % (0b8)            bne $1, $2, test_fail # check $1 == 32                            %
+2F : 00021082;        % (0bc)            srl $2, $2, 2         # $2 <- 8                                   %
+30 : 00000020;        % (0c0)            add $0, $0, $0        # nop padding                               %
+31 : 00420820;        % (0c4)            add $1, $2, $2        # test forwarding, $1 should be 16          %
+32 : 20030001;        % (0c8)            addi $3, $0, 1        # $3 <- 1                                   %
+33 : 00031900;        % (0cc)            sll $3, $3, 4         # $3 <- 16                                  %
+34 : 1423ffd4;        % (0d0)            bne $1, $3, test_fail # check $1 == 16                            %
+35 : 8c01001c;        % (0d4)            lw $1, 28($0)         # $1 <- 204 (from datamem)                  %
+36 : 200200cc;        % (0d8)            addi $2, $0, 0xcc     # $2 <- 0xcc (204)                          %
+37 : 1422ffd1;        % (0dc)            bne $1, $2, test_fail # check $1 == 204 (test forwarding)         %
+38 : 00210020;        % (0e0)            add $0, $1, $1        # should cause no effect                    %
+39 : 00000820;        % (0e4)            add $1, $0, $0        # $1 should be 0                            %
+3A : 1401ffce;        % (0e8)            bne $0, $1, test_fail # check $1 == 0 (test forbid forwarding $0) %
+3B : 20010001;        % (0ec)            addi $1, $0, 1        # $1 <- 1                                   %
+3C : 00210020;        % (0f0)            add $0, $1, $1        # should cause no effect                    %
+3D : 00210820;        % (0f4)            add $1, $1, $1        # $1 <- 2                                   %
+3E : 00000820;        % (0f8)            add $1, $0, $0        # $1 should be 0                            %
+3F : 1401ffc9;        % (0fc)            bne $0, $1, test_fail # check $1 == 0 (test forbid forwarding $0) %
+40 : 8c00001c;        % (100)            lw $0, 28($0)         # should cause no effect                    %
+41 : 00210820;        % (104)            add $1, $1, $1        # $1 <- 0                                   %
+42 : 00000820;        % (108)            add $1, $0, $0        # $1 should be 0                            %
+43 : 1401ffc5;        % (10c)            bne $0, $1, test_fail # check $1 == 0 (test forbid forwarding $0) %
+44 : 20010001;        % (110)            addi $1, $0, 1        # $1 <- 1                                   %
+45 : 00210822;        % (114)            sub $1, $1, $1        # $1 <- 0                                   %
+46 : 1401ffc2;        % (118)            bne $0, $1, test_fail # check $1 == 0                             %
+47 : 00021600;        % (11c)            sll $2, $2, 24        # $2 <- 0xcc000000                          %
+48 : 00021fc2;        % (120)            srl $3, $2, 31        # $3 <- 0x00000001 (test zero extension)    %
+49 : 000217c3;        % (124)            sra $2, $2, 31        # $2 <- 0xffffffff (test sign extension)    %
+4A : 8c010020;        % (128)            lw $1, 32($0)         # $1 <- 0xffffffff (from datamem)           %
+4B : 1422ffbd;        % (12c)            bne $1, $2, test_fail # check $1 == -1, test load/use hazard      %
+4C : 00230820;        % (130)            add $1, $1, $3        # $1 <- 0                                   %
+4D : 1401ffbb;        % (134)            bne $0, $1, test_fail # check $1 == 0                             %
+4E : 2001ffff;        % (138)            addi $1, $0, 0xffff   # $1 <- 0xffffffff (test sign extension)    %
+4F : 1422ffb9;        % (13c)            bne $1, $2, test_fail # check $1 == -1                            %
+50 : 3821ffff;        % (140)            xori $1, $1, 0xffff   # $1 <- 0xffff0000 (test zero extension)    %
+51 : 1001ffb7;        % (144)            beq $0, $1, test_fail # check $1 != 0                             %
+52 : 30210000;        % (148)            andi $1, $1, 0        # $1 <- 0                                   %
+53 : 1401ffb5;        % (14c)            bne $0, $1, test_fail # check $1 == 0                             %
+54 : 00220825;        % (150)            or $1, $1, $2         # $1 <- 0xffffffff                          %
+55 : 1001ffb3;        % (154)            beq $0, $1, test_fail # check $1 != 0                             %
+56 : 3c010001;        % (158)            lui $1, 1             # $1 <- 0x00010000                          %
+57 : ac01001c;        % (15c)            sw $1, 28($0)         # datamem[0x1c] <- 0x00010000               %
+58 : 8c02001c;        % (160)            lw $2, 28($0)         # $2 <- datamem[0x1c] (0x00010000)          %
+59 : 1422ffaf;        % (164)            bne $1, $2, test_fail # check $1 == $2 (test load/store)          %
+5A : 20030001;        % (168)            addi $3, $0, 1        # $3 <- 1                                   %
+5B : 00031c00;        % (16c)            sll $3, $3, 16        # $3 <- 0x00010000                          %
+5C : 1423ffac;        % (170)            bne $1, $3, test_fail # check $1 == 0x00010000 (test lui)         %
+5D : ac1eff70;        % (174)            sw $30, 65392($0)     # display '-' at hex5                       %
+5E : ac1dff60;        % (178)            sw $29, 65376($0)     # display 'P' at hex4                       %
+5F : ac1cff50;        % (17c)            sw $28, 65360($0)     # display 'A' at hex3                       %
+60 : ac1bff40;        % (180)            sw $27, 65344($0)     # display 'S' at hex2                       %
+61 : ac1bff30;        % (184)            sw $27, 65328($0)     # display 'S' at hex1                       %
+62 : ac1eff20;        % (188)            sw $30, 65312($0)     # display '-' at hex0                       %
+63 : 08000063;        % (18c) end:       j end                 # halt the program                          %
+64 : 00000020;        % (190)            add $0, $0, $0        # nop padding                               %
+END ;

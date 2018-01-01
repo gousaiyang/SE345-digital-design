@@ -38,11 +38,11 @@ module pipe_datamem(addr, datain, dataout, we, ram_clock, resetn,
 		end
 	end
 
-	always @(posedge ram_clock) begin // read when ram_clock posedge comes
+	always @(*) begin // read asynchonously
 		case (addr)
-			32'hffffff00: dataout <= {22'b0, sw};
-			32'hffffff10: dataout <= {28'b0, key, 1'b1}; // can only read key[3..1], key0 is used for reset
-			default: dataout <= mem_dataout;
+			32'hffffff00: dataout = {22'b0, sw};
+			32'hffffff10: dataout = {28'b0, key, 1'b1}; // can only read key[3..1], key0 is used for reset
+			default: dataout = mem_dataout;
 		endcase
 	end
 endmodule

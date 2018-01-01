@@ -1,4 +1,5 @@
 `timescale 1ps/1ps
+
 module pipe_computer_sim;
 	reg         resetn, clock;
 	wire        mem_clock;
@@ -20,15 +21,24 @@ module pipe_computer_sim;
 	end
 
 	initial begin // Generate a reset signal at the start.
-		resetn = 0;
+		resetn = 1;
+		#1 resetn = 0;
 		#5 resetn = 1;
 	end
 
 	initial begin // Simulate switch changes.
 		sw <= 10'b1010101010;
+		while (1)
+			#2400 sw = ~sw;
 	end
 
 	initial begin // Simulate key presses.
 		key <= 3'b111;
+		while (1) begin
+			#800 key <= 3'b101; // key2 pressed, should change to sub mode
+			#800 key <= 3'b110; // key1 pressed, should change to xor mode
+			#800 key <= 3'b011; // key3 pressed, should change to add mode
+		end
 	end
+
 endmodule

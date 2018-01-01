@@ -1,0 +1,19 @@
+DEPTH = 32;           % Memory depth and width are required %
+WIDTH = 32;           % Enter a decimal number %
+ADDRESS_RADIX = HEX;  % Address and value radixes are optional %
+DATA_RADIX = HEX;     % Enter BIN, DEC, HEX, or OCT; unless %
+CONTENT               % otherwise specified, radixes = HEX %
+
+BEGIN
+[0..1F] : 00000000;   % Range--Every address from 0 to 1F = 00000000 %
+
+0 : 0000003F;         % (0)  sevenseg code for '-' %
+1 : 0000000C;         % (4)  sevenseg code for 'P' %
+2 : 00000008;         % (8)  sevenseg code for 'A' %
+3 : 00000012;         % (C)  sevenseg code for 'S' %
+4 : 0000000E;         % (10) sevenseg code for 'F' %
+5 : 00000079;         % (14) sevenseg code for 'I' %
+6 : 00000047;         % (18) sevenseg code for 'L' %
+7 : 000000CC;         % (1C) data: 0xcc            %
+8 : FFFFFFFF;         % (20) data: 0xffffffff      %
+END ;
