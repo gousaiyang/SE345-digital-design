@@ -24,6 +24,10 @@ module pipe_computer_sim;
 		resetn = 1;
 		#1 resetn = 0;
 		#5 resetn = 1;
+		// while (1) begin // Reset and run pipe test again.
+		// 	#400 resetn = 0;
+		// 	#5   resetn = 1;
+		// end
 	end
 
 	initial begin // Simulate switch changes.

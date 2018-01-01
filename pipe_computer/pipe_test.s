@@ -5,6 +5,7 @@ start:     lw $30, 0($0)         # load sevenseg code for '-' from datamem
            lw $26, 16($0)        # load sevenseg code for 'F' from datamem
            lw $25, 20($0)        # load sevenseg code for 'I' from datamem
            lw $24, 24($0)        # load sevenseg code for 'L' from datamem
+           sw $0, 36($0)         # datamem[0x24] <- 0
            j main                # enter test program
            add $0, $0, $0        # nop padding
 test_fail: sw $30, 65392($0)     # display '-' at hex5
@@ -85,8 +86,8 @@ s5:        addi $2, $2, 1        # $2 <- 2
            or $1, $1, $2         # $1 <- 0xffffffff
            beq $0, $1, test_fail # check $1 != 0
            lui $1, 1             # $1 <- 0x00010000
-           sw $1, 28($0)         # datamem[0x1c] <- 0x00010000
-           lw $2, 28($0)         # $2 <- datamem[0x1c] (0x00010000)
+           sw $1, 36($0)         # datamem[0x24] <- 0x00010000
+           lw $2, 36($0)         # $2 <- datamem[0x24] (0x00010000)
            bne $1, $2, test_fail # check $1 == $2 (test load/store)
            addi $3, $0, 1        # $3 <- 1
            sll $3, $3, 16        # $3 <- 0x00010000

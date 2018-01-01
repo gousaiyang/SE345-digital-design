@@ -3,7 +3,7 @@ module clock_adjust(refclk, resetn, outclk);
 	input      refclk, resetn;
 	output reg outclk;
 	reg [31:0] counter;
-	parameter N = 2;
+	parameter N = 50000000;
 
 	initial begin
 		counter <= 0;

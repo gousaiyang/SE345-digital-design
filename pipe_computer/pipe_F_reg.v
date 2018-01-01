@@ -3,5 +3,5 @@ module pipe_F_reg(npc, wpcir, clock, resetn, pc);
 	input         wpcir, clock, resetn;
 	output [31:0] pc;
 
-	dffe32 ip(npc, clock, resetn, wpcir, pc);
+	dffe32pc ip(npc, clock, resetn, wpcir, pc);
 endmodule
