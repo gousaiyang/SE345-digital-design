@@ -7,6 +7,5 @@ module pipe_M_stage(mwmem, malu, mb, ram_clock, resetn, mmo, sw, key, hex5, hex4
 	output [6:0]  hex5, hex4, hex3, hex2, hex1, hex0;
 	output [9:0]  led;
 
-	pipe_datamem datamem(malu, mb, mmo, mwmem, ram_clock, resetn,
-		sw, key, hex5, hex4, hex3, hex2, hex1, hex0, led);
+	pipe_datamem datamem(malu, mb, mmo, mwmem, ram_clock, resetn, sw, key, hex5, hex4, hex3, hex2, hex1, hex0, led);
 endmodule

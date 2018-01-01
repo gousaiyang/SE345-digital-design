@@ -88,18 +88,15 @@ module pipe_computer_main(resetn, clock, mem_clock,
 
 	// EXE/MEM 流水线寄存器模块，起承接 EXE 阶段和 MEM 阶段的流水任务。
 	// 在 clock 上升沿时，将 EXE 阶段需传递给 MEM 阶段的信息，锁存在 EXE/MEM 流水线寄存器中，并呈现在 MEM 阶段。
-	pipe_M_reg em_reg(ewreg, em2reg, ewmem, ealu, eb, ern, clock, resetn,
-		mwreg, mm2reg, mwmem, malu, mb, mrn);
+	pipe_M_reg em_reg(ewreg, em2reg, ewmem, ealu, eb, ern, clock, resetn, mwreg, mm2reg, mwmem, malu, mb, mrn);
 
 	// MEM 数据存取模块。其中包含对数据同步 RAM 的读写访问。
 	// 留给信号半个节拍的传输时间，然后在 mem_clock 上沿时，读输出或写输入。
-	pipe_M_stage mem_stage(mwmem, malu, mb, mem_clock, resetn, mmo,
-		sw, key, hex5, hex4, hex3, hex2, hex1, hex0, led);
+	pipe_M_stage mem_stage(mwmem, malu, mb, mem_clock, resetn, mmo, sw, key, hex5, hex4, hex3, hex2, hex1, hex0, led);
 
 	// MEM/WB 流水线寄存器模块，起承接 MEM 阶段和 WB 阶段的流水任务。
 	// 在 clock 上升沿时，将 MEM 阶段需传递给 WB 阶段的信息，锁存在 MEM/WB 流水线寄存器中，并呈现在 WB 阶段。
-	pipe_W_reg mw_reg(mwreg, mm2reg, mmo, malu, mrn, clock, resetn,
-		wwreg, wm2reg, wmo, walu, wrn);
+	pipe_W_reg mw_reg(mwreg, mm2reg, mmo, malu, mrn, clock, resetn, wwreg, wm2reg, wmo, walu, wrn);
 
 	// WB 写回阶段模块。
 	pipe_W_stage wb_stage(walu, wmo, wm2reg, wdi);

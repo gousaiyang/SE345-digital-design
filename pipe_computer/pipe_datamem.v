@@ -1,5 +1,4 @@
-module pipe_datamem(addr, datain, dataout, we, ram_clock, resetn,
-	sw, key, hex5, hex4, hex3, hex2, hex1, hex0, led);
+module pipe_datamem(addr, datain, dataout, we, ram_clock, resetn, sw, key, hex5, hex4, hex3, hex2, hex1, hex0, led);
 	input              we, ram_clock, resetn;
 	input      [31:0]  addr, datain;
 	input      [9:0]   sw;

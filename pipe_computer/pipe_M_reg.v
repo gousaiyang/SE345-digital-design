@@ -1,5 +1,4 @@
-module pipe_M_reg(ewreg, em2reg, ewmem, ealu, eb, ern, clock, resetn,
-	mwreg, mm2reg, mwmem, malu, mb, mrn);
+module pipe_M_reg(ewreg, em2reg, ewmem, ealu, eb, ern, clock, resetn, mwreg, mm2reg, mwmem, malu, mb, mrn);
 	input         ewreg, em2reg, ewmem, clock, resetn;
 	input  [4:0]  ern;
 	input  [31:0] ealu, eb;

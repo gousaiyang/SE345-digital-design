@@ -44,5 +44,4 @@ module pipe_computer_sim;
 			#800 key <= 3'b011; // key3 pressed, should change to add mode
 		end
 	end
-
 endmodule

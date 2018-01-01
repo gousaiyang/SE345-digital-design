@@ -2,7 +2,6 @@ module pipe_D_stage(mwreg, mrn, ern, ewreg, em2reg, mm2reg, dpc4, inst,
 	wrn, wdi, ealu, malu, mmo, wwreg, clock, resetn,
 	bpc, jpc, pcsource, wpcir, dwreg, dm2reg, dwmem, daluc,
 	daluimm, da, db, dimm, drn, dshift, djal);
-
 	input         mwreg, ewreg, em2reg, mm2reg, wwreg, clock, resetn;
 	input  [4:0]  mrn, ern, wrn;
 	input  [31:0] dpc4, inst, wdi, ealu, malu, mmo;

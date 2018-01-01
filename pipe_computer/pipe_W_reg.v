@@ -1,5 +1,4 @@
-module pipe_W_reg(mwreg, mm2reg, mmo, malu, mrn, clock, resetn,
-	wwreg, wm2reg, wmo, walu, wrn);
+module pipe_W_reg(mwreg, mm2reg, mmo, malu, mrn, clock, resetn, wwreg, wm2reg, wmo, walu, wrn);
 	input         mwreg, mm2reg, clock, resetn;
 	input  [4:0]  mrn;
 	input  [31:0] mmo, malu;

@@ -13,8 +13,8 @@ module regfile(rna, rnb, d, wn, we, clk, clrn, qa, qb);
 			integer i;
 			for (i = 1; i < 32; i = i + 1)
 				register[i] <= 0;
-		end else begin
-			if (wn != 0 && we == 1) // write at negedge of clock
+		end else begin // write at negedge of clock
+			if (wn != 0 && we == 1)
 				register[wn] <= d;
 		end
 	end
