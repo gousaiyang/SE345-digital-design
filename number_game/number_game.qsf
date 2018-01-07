@@ -128,6 +128,9 @@ set_location_assignment PIN_W16 -to LEDR[1]
 set_location_assignment PIN_V16 -to LEDR[0]
 
 set_global_assignment -name STRATIX_DEVICE_IO_STANDARD "2.5 V"
+set_global_assignment -name VERILOG_FILE mux8x7.v
+set_global_assignment -name VERILOG_FILE downcount.v
+set_global_assignment -name VERILOG_FILE clock_adjust.v
 set_global_assignment -name VERILOG_FILE cycles_counter.v
 set_global_assignment -name VERILOG_FILE sevenseg.v
 set_global_assignment -name VERILOG_FILE random_generator.v
