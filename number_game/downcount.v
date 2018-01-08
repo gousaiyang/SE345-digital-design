@@ -1,3 +1,18 @@
+module downcount3_flash(halfsecclk, resetn, counter, status);
+	input            halfsecclk, resetn;
+	output reg [2:0] counter;
+	output           status;
+
+	assign status = !(counter % 2);
+
+	always @(posedge halfsecclk or negedge resetn) begin
+		if (!resetn)
+			counter <= 6;
+		else if (counter > 0)
+			counter <= counter - 1;
+	end
+endmodule
+
 module downcount5(secclk, resetn, counter);
 	input            secclk, resetn;
 	output reg [2:0] counter;
