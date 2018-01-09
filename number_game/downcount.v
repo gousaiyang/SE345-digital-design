@@ -1,8 +1,10 @@
+// Downcount 3 seconds and flash sevensegs and LEDs every second.
 module downcount3_flash(halfsecclk, resetn, counter, status);
 	input            halfsecclk, resetn;
 	output reg [2:0] counter;
 	output           status;
 
+	// Turn on/off sevensegs and LEDs.
 	assign status = !(counter % 2);
 
 	always @(posedge halfsecclk or negedge resetn) begin
@@ -13,6 +15,7 @@ module downcount3_flash(halfsecclk, resetn, counter, status);
 	end
 endmodule
 
+// Downcount 5 seconds.
 module downcount5(secclk, resetn, counter);
 	input            secclk, resetn;
 	output reg [2:0] counter;
@@ -25,6 +28,7 @@ module downcount5(secclk, resetn, counter);
 	end
 endmodule
 
+// Downcount 10 * difficulty seconds, output life progress (10 - 0).
 module downcount_difficulty(secclk, resetn, difficulty, progress);
 	input             secclk, resetn;
 	input      [3:0]  difficulty;
@@ -37,7 +41,7 @@ module downcount_difficulty(secclk, resetn, difficulty, progress);
 			progress <= 10;
 		end else if (counter > 0) begin
 			counter <= counter - 1;
-			progress <= (counter - 1 + difficulty - 1) / difficulty;
+			progress <= (counter - 1 + difficulty - 1) / difficulty; // ceil((counter - 1) / difficulty)
 		end
 	end
 endmodule

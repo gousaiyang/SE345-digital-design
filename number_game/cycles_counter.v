@@ -1,3 +1,4 @@
+// Store the number of cycles elapsed from last reset.
 module cycles_counter(clock, resetn, counter);
 	input             clock, resetn;
 	output reg [31:0] counter;

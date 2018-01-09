@@ -3,6 +3,7 @@ module display_welcome(flash_clock, resetn, led);
 	output [9:0] led;
 	reg    [3:0] counter;
 
+	// A red spot moving right.
 	assign led = 1 << (9 - counter);
 
 	always @(posedge flash_clock or negedge resetn)
@@ -58,6 +59,7 @@ module display_progress(progress, led);
 	input  [4:0] progress;
 	output [9:0] led;
 
+	// A life progress bar decaying from 10 to 0 (moving left).
 	assign led = ~((1 << (10 - progress)) - 1);
 endmodule
 
@@ -65,6 +67,7 @@ module display_success(flash_clock, resetn, led);
 	input            flash_clock, resetn;
 	output reg [9:0] led;
 
+	// LED flashing between '1010101010' and '0101010101'.
 	always @(posedge flash_clock or negedge resetn)
 		if (!resetn)
 			led <= 10'b1010101010;
