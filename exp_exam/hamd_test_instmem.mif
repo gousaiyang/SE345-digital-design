@@ -1,0 +1,21 @@
+DEPTH = 128;          % Memory depth and width are required %
+WIDTH = 32;           % Enter a decimal number %
+ADDRESS_RADIX = HEX;  % Address and value radixes are optional %
+DATA_RADIX = HEX;     % Enter BIN, DEC, HEX, or OCT; unless %
+                      % otherwise specified, radixes = HEX %
+CONTENT
+BEGIN
+[0..7F] : 00000000;   % Range--Every address from 0 to 7F = 00000000 %
+
+0 : 08000004;         % (00) start:     j main_loop       # enter main loop                                        %
+1 : 001ef080;         % (04) sevenseg:  sll $30, $30, 2   # calculate sevenseg table item addr to load             %
+2 : 03e00008;         % (08)            jr $ra            # return, delay slot underneath                          %
+3 : 8fdd0000;         % (0c)            lw $29, 0($30)    # load sevenseg code of arg($30) from data memory to $29 %
+4 : 8c01ff00;         % (10) main_loop: lw $1, 65280($0)  # load state of switches to $1                           %
+5 : 302100ff;         % (14)            andi $1, $1, 0xff # get SW[7..0]                                           %
+6 : 200200ca;         % (18)            addi $2, $0, 0xca # $2 <= 8'b11001010                                      %
+7 : 0c000001;         % (1c)            jal sevenseg      # call sevenseg (passing $30), delay slot underneath        %
+8 : 0041f027;         % (20)            hamd $30, $2, $1  # calculate hamming distance and store to $30            %
+9 : 08000004;         % (24)            j main_loop       # loop forever, delay slot underneath                    %
+A : ac1dff20;         % (28)            sw $29, 65312($0) # show result on HEX0                                    %
+END ;
