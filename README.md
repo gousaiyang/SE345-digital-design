@@ -14,5 +14,5 @@ This is a repo which contains projects of the course **Digital Logic Design of C
 
 ## License
 - Usage of the project `my_first_fpga`, and Altera-generated files in other projects, should follow Altera's license.
-- Projects `sc_computer`, `pipe_computer`, `exp_exam` and the experiment manual contain materials provided by instructors/textbook authors/TAs/former students, therefore they should only be used for educational purposes.
+- Projects `sc_computer`, `pipe_computer`, `exp_exam` and the experiment manual contain materials provided by instructors/textbook authors/TAs/former students. They should only be used for educational purposes.
 - Other code completed by myself follows the MIT License.
